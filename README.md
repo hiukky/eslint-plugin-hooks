@@ -16,35 +16,33 @@ Next, install `eslint-plugin-hooks-sort`:
 $ npm install eslint-plugin-hooks-sort --save-dev
 ```
 
-
 ## Usage
 
 Add `hooks-sort` to the plugins section of your `.eslintrc` configuration file. You can omit the `eslint-plugin-` prefix:
 
 ```json
 {
-    "plugins": [
-        "hooks-sort"
-    ]
+  "plugins": ["hooks-sort"]
 }
 ```
-
 
 Then configure the rules you want to use under the rules section.
 
 ```json
 {
-    "rules": {
-        "hooks-sort/rule-name": 2
-    }
+  "rules": {
+    "hooks-sort/order-hooks": [
+      2,
+      {
+        "groups": [
+          "useSelector",
+          "useContext",
+          "useState",
+          "useDispatch",
+          "useCallback"
+        ]
+      }
+    ]
+  }
 }
 ```
-
-## Supported Rules
-
-* Fill in provided rules here
-
-
-
-
-

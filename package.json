@@ -17,6 +17,8 @@
     "url": "https://hiukky.com/"
   },
   "scripts": {
+    "clean": "rimraf dist typings",
+    "prebuild": "yarn clean",
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.spec.ts' --recursive",
     "build": "rollup -c",
     "format": "prettier --write \"**/*.ts\""
@@ -35,6 +37,7 @@
     "husky": "^4.2.5",
     "mocha": "^7.2.0",
     "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
     "rollup": "^2.23.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-filesize": "^9.0.2",

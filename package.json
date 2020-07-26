@@ -24,6 +24,8 @@
     "format": "prettier --write \"**/*.ts\""
   },
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^3.7.0",
+    "eslint-config-airbnb-base": "^14.2.0",
     "requireindex": "~1.1.0"
   },
   "devDependencies": {
@@ -33,7 +35,7 @@
     "@types/eslint": "^7.2.0",
     "@types/mocha": "^8.0.0",
     "@types/requireindex": "^1.2.0",
-    "eslint": "^7.5.0",
+    "eslint": "^5.16.0",
     "husky": "^4.2.5",
     "mocha": "^7.2.0",
     "prettier": "^2.0.5",

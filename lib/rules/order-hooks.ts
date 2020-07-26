@@ -4,6 +4,8 @@
  */
 'use strict'
 
+import { TContext, TNode } from './types'
+
 module.exports = {
   meta: {
     docs: {
@@ -25,17 +27,17 @@ module.exports = {
     ],
   },
 
-  create: (ctx: any) => {
+  create: (ctx: TContext) => {
     const options = ctx.options[0]
-    const orderHooks: [string, any][] = []
+    const orderHooks: [string, TNode][] = []
 
     return {
       /**
        * @function VariableDeclaration
        *
-       * @param {any} node
+       * @param {TNode} node
        */
-      VariableDeclaration: (node: any) => {
+      VariableDeclaration: (node: TNode) => {
         const declaration = node.declarations[0].init
 
         if (
@@ -43,7 +45,7 @@ module.exports = {
           node.kind === 'const' &&
           declaration.callee.name
         ) {
-          if (declaration.callee.name.substring(0, 3) === 'use') {
+          if (declaration.callee.name.slice(3) === 'use') {
             orderHooks.push([declaration.callee.name, node])
           }
         }
@@ -51,9 +53,11 @@ module.exports = {
 
       /**
        * @function Program
+       *
+       * @param {TNode} node
        */
       'Program:exit': () => {
-        const orderHooksCorrect: [string, any][] = [...orderHooks].sort(
+        const orderHooksCorrect: [string, TNode][] = [...orderHooks].sort(
           (a, b) => options.groups.indexOf(a[0]) - options.groups.indexOf(b[0]),
         )
 

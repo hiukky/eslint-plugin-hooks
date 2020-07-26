@@ -10,7 +10,7 @@ module.exports = {
   meta: {
     docs: {
       description: 'A simple organizer for ordering hooks.',
-      category: 'Fill me in',
+      category: 'Non-matching declaration order.',
       recommended: false,
     },
     fixable: undefined,

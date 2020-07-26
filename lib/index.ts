@@ -6,6 +6,4 @@
 
 import requireIndex from 'requireindex'
 
-const rules = requireIndex(`${__dirname}/rules`)
-
-export default rules
+export const rules = requireIndex(`${__dirname}/rules`)

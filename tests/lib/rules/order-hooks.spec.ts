@@ -9,23 +9,65 @@ import rule from '../../../lib/rules/order-hooks'
 
 const Tester = new RuleTester()
 
+const options = [
+  {
+    groups: ['useReducer', 'useContext', 'useState'],
+  },
+]
+
 Tester.run('order-hooks', rule, {
   valid: [
-    'const { signIn, setManagerToken } = useContext(AuthContext)',
-    'const [selectedCompanies, setSelectedCompanies] = useState([])',
-    'const { setColors } = useContext(ThemeContext)',
-    'const [inputValue, setInputValue] = useState()',
-    'const dispatch = useDispatch()',
+    {
+      code: `
+      const [todos, dispatch] = useReducer(todosReducer)
+
+      const locale = useContext(LocaleContext)
+
+      const [count, setCount] = useState(0)
+
+      const [size, setSize] = useState(0)
+    `,
+      parserOptions: {
+        ecmaVersion: 6,
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      options,
+    },
   ],
   invalid: [
     {
-      code: 'var signIn = useContext()',
+      code: `
+      const [count, setCount] = useState(0)
+
+      const locale = useContext(LocaleContext)
+
+      const [todos, dispatch] = useReducer(todosReducer)
+
+      const [size, setSize] = useState(0)
+    `,
+      parserOptions: {
+        ecmaVersion: 6,
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
       errors: [
         {
-          message: 'Dont use order for hook.',
+          message:
+            'Non-matching declaration order. useState comes after useReducer.',
+          type: 'VariableDeclaration',
+        },
+        {
+          message:
+            'Non-matching declaration order. useReducer comes before useState.',
           type: 'VariableDeclaration',
         },
       ],
+      options,
     },
   ],
 })

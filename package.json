@@ -7,10 +7,7 @@
     "eslintplugin",
     "eslint-plugin"
   ],
-  "main": "dist/lib/index.js",
-  "module": "dist/lib/index.es.js",
-  "jsnext:main": "dist/lib/index.es.js",
-  "typings": "typings/index.d.ts",
+  "main": "dist/index.js",
   "author": {
     "name": "Romullo @hiukky",
     "email": "developermarsh@gmail.com",
@@ -20,7 +17,7 @@
     "clean": "rimraf dist typings",
     "prebuild": "yarn clean",
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.spec.ts' --recursive",
-    "build": "rollup -c",
+    "build": "tsc -d -p .",
     "format": "prettier --write \"**/*.ts\""
   },
   "dependencies": {
@@ -34,29 +31,20 @@
     "@types/chai": "^4.2.12",
     "@types/eslint": "^7.2.0",
     "@types/mocha": "^8.0.0",
+    "@types/node": "^14.0.26",
+    "@types/react": "^16.9.43",
     "@types/requireindex": "^1.2.0",
     "eslint": "^7.5.0",
     "husky": "^4.2.5",
     "mocha": "^8.0.1",
     "prettier": "^2.0.5",
+    "react": "^16.13.1",
     "rimraf": "^3.0.2",
-    "rollup": "^2.23.0",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-filesize": "^9.0.2",
-    "rollup-plugin-gzip": "^2.5.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-peer-deps-external": "^2.2.3",
-    "rollup-plugin-terser": "^6.1.0",
-    "rollup-plugin-typescript2": "^0.27.1",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
   },
   "engines": {
     "node": ">=0.10.0"
   },
-  "license": "ISC",
-  "files": [
-    "dist",
-    "typings"
-  ]
+  "license": "ISC"
 }

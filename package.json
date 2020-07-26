@@ -1,0 +1,57 @@
+{
+  "name": "eslint-plugin-hooks-sort",
+  "version": "0.0.0",
+  "description": "A simple organizer for ordering hooks.",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin"
+  ],
+  "main": "dist/lib/index.js",
+  "module": "dist/lib/index.es.js",
+  "jsnext:main": "dist/lib/index.es.js",
+  "typings": "typings/index.d.ts",
+  "author": {
+    "name": "Romullo @hiukky",
+    "email": "developermarsh@gmail.com",
+    "url": "https://hiukky.com/"
+  },
+  "scripts": {
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.spec.ts' --recursive",
+    "build": "rollup -c",
+    "format": "prettier --write \"**/*.ts\""
+  },
+  "dependencies": {
+    "requireindex": "~1.1.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
+    "@types/chai": "^4.2.12",
+    "@types/eslint": "^7.2.0",
+    "@types/mocha": "^8.0.0",
+    "@types/requireindex": "^1.2.0",
+    "eslint": "^7.5.0",
+    "husky": "^4.2.5",
+    "mocha": "^7.2.0",
+    "prettier": "^2.0.5",
+    "rollup": "^2.23.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-filesize": "^9.0.2",
+    "rollup-plugin-gzip": "^2.5.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-peer-deps-external": "^2.2.3",
+    "rollup-plugin-terser": "^6.1.0",
+    "rollup-plugin-typescript2": "^0.27.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "license": "ISC",
+  "files": [
+    "dist",
+    "typings"
+  ]
+}

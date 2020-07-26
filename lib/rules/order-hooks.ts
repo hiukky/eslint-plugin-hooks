@@ -45,7 +45,7 @@ module.exports = {
           node.kind === 'const' &&
           declaration.callee.name
         ) {
-          if (declaration.callee.name.slice(3) === 'use') {
+          if (declaration.callee.name.slice(0, 3) === 'use') {
             orderHooks.push([declaration.callee.name, node])
           }
         }

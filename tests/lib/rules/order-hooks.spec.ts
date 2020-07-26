@@ -5,9 +5,17 @@
 'use strict'
 
 import { RuleTester } from 'eslint'
-import rule from '../../../lib/rules/order-hooks'
+import * as rule from '../../../lib/rules/order-hooks'
 
 const Tester = new RuleTester()
+
+const parserOptions: any = {
+  ecmaVersion: 6,
+  sourceType: 'module',
+  ecmaFeatures: {
+    jsx: true,
+  },
+}
 
 const options = [
   {
@@ -15,7 +23,7 @@ const options = [
   },
 ]
 
-Tester.run('order-hooks', rule, {
+Tester.run('order-hooks', rule as any, {
   valid: [
     {
       code: `
@@ -27,13 +35,7 @@ Tester.run('order-hooks', rule, {
 
       const [size, setSize] = useState(0)
     `,
-      parserOptions: {
-        ecmaVersion: 6,
-        sourceType: 'module',
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
+      parserOptions,
       options,
     },
   ],

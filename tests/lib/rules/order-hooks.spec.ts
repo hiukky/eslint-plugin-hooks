@@ -58,13 +58,6 @@ Tester.run('order-hooks', rule as any, {
 
       const [size, setSize] = useState(0)
     `,
-      parserOptions: {
-        ecmaVersion: 6,
-        sourceType: 'module',
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
       errors: [
         {
           message:
@@ -77,6 +70,7 @@ Tester.run('order-hooks', rule as any, {
           type: 'VariableDeclaration',
         },
       ],
+      parserOptions,
       options,
     },
     {
@@ -97,13 +91,6 @@ Tester.run('order-hooks', rule as any, {
 
       const [size, setSize] = useState(0)
     `,
-      parserOptions: {
-        ecmaVersion: 6,
-        sourceType: 'module',
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
       errors: [
         {
           message:
@@ -116,6 +103,7 @@ Tester.run('order-hooks', rule as any, {
           type: 'VariableDeclaration',
         },
       ],
+      parserOptions,
       options,
     },
   ],

@@ -11,6 +11,8 @@ module.exports = {
     docs: {
       description: 'A simple organizer for ordering hooks.',
       category: 'Non-matching declaration order.',
+      url:
+        'https://github.com/hiukky/eslint-plugin-hooks-sort/blob/master/docs/rules/order-hooks.md',
       recommended: false,
     },
     fixable: undefined,
@@ -20,7 +22,6 @@ module.exports = {
         properties: {
           groups: {
             type: 'array',
-            default: [],
           },
         },
       },
@@ -57,7 +58,11 @@ module.exports = {
        * @param {TNode} node
        */
       'Program:exit': () => {
-        const { groups } = options
+        var groups: string[] = options?.groups || [
+          'useContext',
+          'useState',
+          'useEffect',
+        ]
 
         const matchingHooks: [string, TNode][] = [...orderHooks].filter(hook =>
           groups.includes(hook[0]),

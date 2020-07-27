@@ -57,11 +57,17 @@ module.exports = {
        * @param {TNode} node
        */
       'Program:exit': () => {
-        const orderHooksCorrect: [string, TNode][] = [...orderHooks].sort(
-          (a, b) => options.groups.indexOf(a[0]) - options.groups.indexOf(b[0]),
+        const { groups } = options
+
+        const matchingHooks: [string, TNode][] = [...orderHooks].filter(hook =>
+          groups.includes(hook[0]),
         )
 
-        orderHooks.filter((hook, index) => {
+        const orderHooksCorrect: [string, TNode][] = [...matchingHooks].sort(
+          (a, b) => groups.indexOf(a[0]) - groups.indexOf(b[0]),
+        )
+
+        matchingHooks.filter((hook, index) => {
           if (
             orderHooksCorrect.length > 1 &&
             orderHooksCorrect[index][0] !== hook[0]

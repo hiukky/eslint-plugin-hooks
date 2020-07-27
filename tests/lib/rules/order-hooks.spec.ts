@@ -34,6 +34,14 @@ Tester.run('order-hooks', rule as any, {
       const [count, setCount] = useState(0)
 
       const [size, setSize] = useState(0)
+
+      const memoizedCallback = useCallback(() => {
+        doSomething(a, b);
+      },[a, b])
+
+      useEffect(() => {
+        document.title = "Hello"
+      }, [])
     `,
       parserOptions,
       options,
@@ -47,6 +55,45 @@ Tester.run('order-hooks', rule as any, {
       const locale = useContext(LocaleContext)
 
       const [todos, dispatch] = useReducer(todosReducer)
+
+      const [size, setSize] = useState(0)
+    `,
+      parserOptions: {
+        ecmaVersion: 6,
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      errors: [
+        {
+          message:
+            'Non-matching declaration order. useState comes after useReducer.',
+          type: 'VariableDeclaration',
+        },
+        {
+          message:
+            'Non-matching declaration order. useReducer comes before useState.',
+          type: 'VariableDeclaration',
+        },
+      ],
+      options,
+    },
+    {
+      code: `
+      const [count, setCount] = useState(0)
+
+      const locale = useContext(LocaleContext)
+
+      const [todos, dispatch] = useReducer(todosReducer)
+
+      useEffect(() => {
+        document.title = "Hello"
+      }, [])
+
+      const memoizedCallback = useCallback(() => {
+        doSomething(a, b);
+      },[a, b])
 
       const [size, setSize] = useState(0)
     `,

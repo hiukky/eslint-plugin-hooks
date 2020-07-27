@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-hooks-sort",
-  "version": "0.1.0-alpha",
+  "version": "0.1.0-alpha.1",
   "description": "A simple organizer for ordering hooks.",
   "keywords": [
     "eslint",
@@ -46,5 +46,5 @@
   "engines": {
     "node": ">=0.10.0"
   },
-  "license": "ISC"
+  "license": "MIT"
 }

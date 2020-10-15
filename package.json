@@ -5,9 +5,19 @@
   "keywords": [
     "eslint",
     "eslintplugin",
-    "eslint-plugin"
+    "eslint-plugin",
+    "hooks",
+    "react",
+    "react-hooks"
   ],
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hiukky/eslint-plugin-hooks-sort.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hiukky/eslint-plugin-hooks-sort/issues"
+  },
   "author": {
     "name": "Romullo @hiukky",
     "email": "developermarsh@gmail.com",

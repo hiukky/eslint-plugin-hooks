@@ -31,7 +31,7 @@ Then configure the rules you want to use under the rules section.
 ```json
 {
   "rules": {
-    "hooks-sort/order-hooks": [
+    "hooks-sort/order": [
       2,
       {
         "groups": [

@@ -2,10 +2,7 @@
 
 <p align="center">
   <a href="https://travis-ci.org/github/hiukky/eslint-plugin-hooks-sort">
-    <img alt="Travis (.org) branch" src="https://img.shields.io/travis/hiukky/eslint-plugin-hooks-sort/develop?color=%2323d18c&style=for-the-badge&colorA=1C1D27">
-  </a>
-  <a href="https://codecov.io/gh/hiukky/eslint-plugin-hooks-sort">
-    <img alt="Codecov branch" src="https://img.shields.io/codecov/c/github/hiukky/eslint-plugin-hooks-sort/develop?color=%23ff5d8f&style=for-the-badge&colorA=1C1D27">
+    <img alt="Build" src="https://img.shields.io/github/workflow/status/hiukky/eslint-plugin-hooks-sort/build?color=%2323d18c&style=for-the-badge&colorA=1C1D27">
   </a>
   <a href="https://github.com/hiukky/eslint-plugin-hooks-sort/stargazers">
     <img alt="GitHub stars" src="https://img.shields.io/github/stars/hiukky/eslint-plugin-hooks-sort?color=%2300cecb&style=for-the-badge&colorA=1C1D27">

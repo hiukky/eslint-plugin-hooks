@@ -12,7 +12,7 @@ module.exports = {
       description: 'A simple organizer for ordering hooks.',
       category: 'Non-matching declaration order.',
       url:
-        'https://github.com/hiukky/eslint-plugin-hooks-sort/blob/master/docs/rules/order-hooks.md',
+        'https://github.com/hiukky/eslint-plugin-hooks-sort/blob/master/docs/rules/order.md',
       recommended: false,
     },
     fixable: undefined,

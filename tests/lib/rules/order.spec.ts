@@ -5,7 +5,7 @@
 'use strict'
 
 import { RuleTester } from 'eslint'
-import * as rule from '../../../lib/rules/order-hooks'
+import * as rule from '../../../lib/rules/order'
 
 const Tester = new RuleTester()
 

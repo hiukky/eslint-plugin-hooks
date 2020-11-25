@@ -1,6 +1,34 @@
-# eslint-plugin-hooks-sort
+<h1 align="center"> eslint-plugin-hooks-sort </h1>
 
-A simple organizer for ordering hooks.
+<p align="center">
+  <a href="https://travis-ci.org/github/hiukky/eslint-plugin-hooks-sort">
+    <img alt="Build" src="https://img.shields.io/github/workflow/status/hiukky/eslint-plugin-hooks-sort/build?color=%2323d18c&style=for-the-badge&colorA=1C1D27">
+  </a>
+  <a href="https://github.com/hiukky/eslint-plugin-hooks-sort/stargazers">
+    <img alt="GitHub stars" src="https://img.shields.io/github/stars/hiukky/eslint-plugin-hooks-sort?color=%2300cecb&style=for-the-badge&colorA=1C1D27">
+  </a>
+  <a href="https://github.com/hiukky/eslint-plugin-hooks-sort/network">
+    <img alt="GitHub forks" src="https://img.shields.io/github/forks/hiukky/eslint-plugin-hooks-sort?color=%23a29bfe&style=for-the-badge&colorA=1C1D27">
+  </a>
+  <a href="https://github.com/hiukky/eslint-plugin-hooks-sort/issues">
+    <img alt="GitHub issues" src="https://img.shields.io/github/issues/hiukky/eslint-plugin-hooks-sort?style=for-the-badge&color=ffe066&colorA=1C1D27">
+  </a>
+  <a href="httdivs://github.com/hiukky/eslint-plugin-hooks-sort/blob/develop/LICENSE">
+    <img alt="GitHub license" src="https://img.shields.io/github/license/hiukky/eslint-plugin-hooks-sort?color=%23eab464&style=for-the-badge&colorA=1C1D27" />
+  </a>
+  <a href="https://www.npmjs.com/package/eslint-plugin-hooks-sort">
+    <img alt="NPM" src="https://img.shields.io/npm/dt/eslint-plugin-hooks-sort?color=%23f49e4c&style=for-the-badge&colorA=1C1D27" />
+  </a>
+</p>
+
+<h3 align="center"> A simple organizer for ordering hooks. </h3>
+
+<p align="center">
+  <sub>Built with ❤︎ by <a href="https://hiukky.com">Hiukky</a>
+  <br/>
+</p>
+
+<br>
 
 ## Installation
 
@@ -31,7 +59,7 @@ Then configure the rules you want to use under the rules section.
 ```json
 {
   "rules": {
-    "hooks-sort/order-hooks": [
+    "hooks-sort/order": [
       2,
       {
         "groups": [

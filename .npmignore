@@ -1,5 +1,6 @@
 node_modules
 tests
+lib
 .eslintrc.json
 commitlint.config.js
 jest.config.js

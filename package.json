@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-hooks-sort",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A simple organizer for ordering hooks.",
   "keywords": [
     "eslint",

@@ -1,6 +1,6 @@
 /**
  * @fileoverview A simple organizer for ordering hooks.
- * @author Hiukky
+ * @author Romullo @hiukky
  */
 'use strict'
 

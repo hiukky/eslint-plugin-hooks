@@ -1,10 +1,12 @@
 /**
  * @fileoverview A simple organizer for ordering hooks.
- * @author Hiukky
+ * @author Romullo @hiukky
  */
 'use strict'
 
-import { TContext, TNode } from './types'
+import { IContext, INode } from './types'
+
+const DEFAULT_GROUPS = ['useContext', 'useState', 'useEffect']
 
 module.exports = {
   meta: {
@@ -12,7 +14,7 @@ module.exports = {
       description: 'A simple organizer for ordering hooks.',
       category: 'Non-matching declaration order.',
       url:
-        'https://github.com/hiukky/eslint-plugin-hooks-sort/blob/master/docs/rules/order.md',
+        'https://github.com/hiukky/eslint-plugin-hooks/blob/master/docs/rules/sort.md',
       recommended: false,
     },
     fixable: undefined,
@@ -28,17 +30,17 @@ module.exports = {
     ],
   },
 
-  create: (ctx: TContext) => {
+  create: (ctx: IContext) => {
     const options = ctx.options[0]
-    const orderHooks: [string, TNode][] = []
+    const orderHooks: [string, INode][] = []
 
     return {
       /**
        * @function VariableDeclaration
        *
-       * @param {TNode} node
+       * @param {INode} node
        */
-      VariableDeclaration: (node: TNode) => {
+      VariableDeclaration: (node: INode) => {
         const declaration = node.declarations[0].init
 
         if (
@@ -55,20 +57,16 @@ module.exports = {
       /**
        * @function Program
        *
-       * @param {TNode} node
+       * @param {INode} node
        */
       'Program:exit': () => {
-        var groups: string[] = options?.groups || [
-          'useContext',
-          'useState',
-          'useEffect',
-        ]
+        var groups: string[] = options?.groups || DEFAULT_GROUPS
 
-        const matchingHooks: [string, TNode][] = [...orderHooks].filter(hook =>
+        const matchingHooks: [string, INode][] = [...orderHooks].filter(hook =>
           groups.includes(hook[0]),
         )
 
-        const orderHooksCorrect: [string, TNode][] = [...matchingHooks].sort(
+        const orderHooksCorrect: [string, INode][] = [...matchingHooks].sort(
           (a, b) => groups.indexOf(a[0]) - groups.indexOf(b[0]),
         )
 

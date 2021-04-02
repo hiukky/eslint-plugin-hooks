@@ -1,5 +1,5 @@
 {
-  "name": "eslint-plugin-hooks-sort",
+  "name": "eslint-plugin-hooks",
   "version": "0.1.1",
   "description": "A simple organizer for ordering hooks.",
   "keywords": [
@@ -13,10 +13,10 @@
   "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hiukky/eslint-plugin-hooks-sort.git"
+    "url": "git+https://github.com/hiukky/eslint-plugin-hooks.git"
   },
   "bugs": {
-    "url": "https://github.com/hiukky/eslint-plugin-hooks-sort/issues"
+    "url": "https://github.com/hiukky/eslint-plugin-hooks/issues"
   },
   "author": {
     "name": "Romullo @hiukky",

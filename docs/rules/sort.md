@@ -1,4 +1,4 @@
-# A simple organizer for ordering hooks. (order)
+# A simple organizer for ordering hooks. (sort)
 
 Please describe the origin of the rule here.
 
@@ -10,7 +10,7 @@ Examples of **incorrect** code for this rule:
 
 ```js
 /**
- *  "hooks-sort/order": [
+ *  "hooks/sort": [
  *    2,
  *    {
  *      "groups": [
@@ -31,7 +31,7 @@ Examples of **correct** code for this rule:
 
 ```js
 /**
- *  "hooks-sort/order": [
+ *  "hooks/sort": [
  *    2,
  *    {
  *      "groups": [

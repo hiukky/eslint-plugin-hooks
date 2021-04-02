@@ -1,15 +1,15 @@
-export type TOrderHooksOptions = {
+export type IOrderHooksOptions = {
   groups: string[]
 }
 
-export type TSchemaOptions = TOrderHooksOptions
+export type ISchemaOptions = IOrderHooksOptions
 
-export type TContext = {
+export type IContext = {
   report(node: any, message: string): void
-  options: TSchemaOptions[]
+  options: ISchemaOptions[]
 }
 
-export type TNode = {
+export type INode = {
   kind: 'var' | 'let' | 'const'
   declarations: {
     init: {

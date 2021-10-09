@@ -63,11 +63,13 @@ Then configure the rules you want to use under the rules section.
       2,
       {
         "groups": [
-          "useSelector",
+          "useReducer",
           "useContext",
           "useState",
+          "useRef",
           "useDispatch",
-          "useCallback"
+          "useCallback",
+          "useEffect"
         ]
       }
     ]

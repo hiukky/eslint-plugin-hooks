@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-hooks",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A simple organizer for ordering hooks.",
   "main": "dist/index.js",
   "repository": {
@@ -19,8 +19,8 @@
     "prepare": "husky install",
     "clean": "rimraf dist typings",
     "prebuild": "yarn clean",
-    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.spec.ts' --recursive",
-    "build": "tsc -d -p .",
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r tsconfig-paths/register -r ts-node/register 'lib/**/*.spec.ts' --recursive",
+    "build": "tsc -d -p tsconfig.build.json",
     "format": "prettier --write \"**/*.ts\"",
     "prepublishOnly": "pinst --disable",
     "postpublish": "pinst --enable"
@@ -29,25 +29,26 @@
     "requireindex": "~1.2.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^12.1.1",
-    "@commitlint/config-conventional": "^12.1.1",
-    "@types/chai": "^4.2.15",
-    "@types/eslint": "^7.2.8",
-    "@types/mocha": "^8.2.2",
-    "@types/node": "^14.14.37",
-    "@types/react": "^17.0.3",
+    "@commitlint/cli": "^13.2.1",
+    "@commitlint/config-conventional": "^13.2.0",
+    "@types/chai": "^4.2.22",
+    "@types/eslint": "^7.28.1",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.10.3",
+    "@types/react": "^17.0.27",
     "@types/requireindex": "^1.2.0",
-    "@typescript-eslint/eslint-plugin": "^4.20.0",
-    "eslint": "^7.23.0",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "husky": "^6.0.0",
-    "mocha": "^8.3.2",
+    "husky": "^7.0.2",
+    "mocha": "^9.1.2",
     "pinst": "^2.1.6",
-    "prettier": "^2.2.1",
+    "prettier": "^2.4.1",
     "react": "^17.0.2",
     "rimraf": "^3.0.2",
-    "ts-node": "^9.1.1",
-    "typescript": "^4.2.3"
+    "ts-node": "^10.2.1",
+    "tsconfig-paths": "^3.11.0",
+    "typescript": "^4.4.3"
   },
   "engines": {
     "node": ">=0.10.0"

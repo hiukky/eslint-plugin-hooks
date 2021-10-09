@@ -1,7 +1,10 @@
+.husky
+.github
 node_modules
 tests
 lib
 .eslintrc
+.nvmrc
 commitlint.config.js
 jest.config.js
 .prettierrc

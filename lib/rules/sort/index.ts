@@ -62,19 +62,19 @@ module.exports = {
 
             if (isExportableDeclaration()) {
               declarations =
-                node['declaration']['declarations']?.[0]['init'] ||
+                node['declaration']?.['declarations']?.[0]['init'] ||
                 node['declaration']
             } else {
               declarations = node['declarations']?.[0]['init'] || node
             }
 
-            return declarations['body']?.['body']
+            return declarations?.['body']?.['body']
           })
           .filter(Boolean)
           .forEach((declarations: Node[]) => {
             let nodes: Node[] = []
 
-            declarations.forEach(node => {
+            declarations.forEach?.(node => {
               if (node['type'] === 'ExpressionStatement') {
                 nodes.push(node['expression'])
               }
@@ -98,7 +98,7 @@ module.exports = {
                 const getHookName = (): string =>
                   type === 'CallExpression'
                     ? declaration.name
-                    : declaration.callee.name
+                    : declaration.callee?.name
 
                 const getHookNode = (): Node =>
                   type === 'CallExpression' ? declaration : declaration.callee

@@ -62,19 +62,19 @@ module.exports = {
 
             if (isExportableDeclaration()) {
               declarations =
-                node['declaration']['declarations']?.[0]['init'] ||
+                node['declaration']?.['declarations']?.[0]['init'] ||
                 node['declaration']
             } else {
               declarations = node['declarations']?.[0]['init'] || node
             }
 
-            return declarations['body']?.['body']
+            return declarations?.['body']?.['body']
           })
           .filter(Boolean)
           .forEach((declarations: Node[]) => {
             let nodes: Node[] = []
 
-            declarations.forEach(node => {
+            declarations?.forEach(node => {
               if (node['type'] === 'ExpressionStatement') {
                 nodes.push(node['expression'])
               }
@@ -85,46 +85,51 @@ module.exports = {
             })
 
             const hooks = nodes
-              .map(
+              ?.map(
                 ({ type, callee, init }) =>
                   (type === 'CallExpression'
                     ? [type, callee]
                     : type === 'VariableDeclarator'
                     ? [type, init]
-                    : []) as [string, Node],
+                    : []) as [Node['type'], Node],
               )
               .filter(node => node.length)
               .map(([type, declaration]) => {
-                const getHookName = (): string =>
-                  type === 'CallExpression'
-                    ? declaration.name
-                    : declaration.callee.name
+                switch (type) {
+                  case 'MemberExpression':
+                    return declaration.property
 
-                const getHookNode = (): Node =>
-                  type === 'CallExpression' ? declaration : declaration.callee
+                  case 'CallExpression':
+                    return declaration.type === 'MemberExpression'
+                      ? declaration.property
+                      : declaration.callee || declaration
 
-                return [getHookName(), getHookNode()] as [string, Node]
+                  case 'VariableDeclarator':
+                  default:
+                    return declaration.callee.property || declaration.callee
+                }
               })
+              .filter(Boolean)
               .filter(
-                ([name]) =>
-                  name?.slice(0, 3) === 'use' && groups.includes(name),
+                hook =>
+                  hook.name.slice(0, 3) === 'use' && groups.includes(hook.name),
               )
 
-            const correctOrdering: [string, Node][] = [...hooks].sort(
-              (a, b) => groups.indexOf(a[0]) - groups.indexOf(b[0]),
+            const correctOrdering: Node[] = [...hooks].sort(
+              (a, b) => groups.indexOf(a.name) - groups.indexOf(b.name),
             )
 
-            hooks.forEach((hook, index) => {
+            hooks.forEach((hook, idx) => {
               const noMatching = (): boolean =>
                 correctOrdering.length > 1 &&
-                correctOrdering[index][0] !== hook[0]
+                correctOrdering[idx].name !== hook.name
 
               if (noMatching()) {
                 ctx.report(
-                  hook[1],
-                  `Non-matching declaration order. ${hook[0]} comes ${
-                    !index ? 'after' : 'before'
-                  } ${correctOrdering[index][0]}.`,
+                  hook,
+                  `Non-matching declaration order. ${hook.name} comes ${
+                    !idx ? 'after' : 'before'
+                  } ${correctOrdering[idx].name}.`,
                 )
               }
             })

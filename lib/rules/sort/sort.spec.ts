@@ -27,6 +27,37 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
   valid: [
     {
       code: `
+      import React from 'react'
+
+      export const App = () => {
+        return <></>
+      }
+     `,
+      parserOptions,
+      options,
+    },
+    {
+      code: `
+      import * as React from 'react'
+      import { useRef } from 'react'
+
+      export const ComponentA = () => {
+        const [count, setCount] = React.useState(0)
+
+        const countRef = useRef(0)
+
+        React.useEffect(() => {
+          console.log('Hello')
+        },[])
+
+        return <></>
+      }
+     `,
+      parserOptions,
+      options,
+    },
+    {
+      code: `
       import { useState, useEffect, useReducer } from 'react'
 
       export function ComponentA() {
@@ -190,7 +221,6 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
 
       export function ComponentA() {
         const [count, setCount] = useState(0)
-
         const locale = useContext(LocaleContext)
       }
 
@@ -218,6 +248,36 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
         {
           message:
             'Non-matching declaration order. useRef comes before useEffect.',
+        },
+      ],
+      parserOptions,
+      options,
+    },
+    {
+      code: `
+      import * as React from 'react'
+      import { useRef } from 'react'
+
+      export const ComponentA = () => {
+        React.useEffect(() => {
+          console.log('Hello')
+        },[])
+
+        const countRef = useRef(0)
+
+        const [count, setCount] = React.useState(0)
+
+        return <></>
+      }
+      `,
+      errors: [
+        {
+          message:
+            'Non-matching declaration order. useEffect comes after useState.',
+        },
+        {
+          message:
+            'Non-matching declaration order. useState comes before useEffect.',
         },
       ],
       parserOptions,

@@ -1,5 +1,6 @@
 export type Node = {
   type:
+    | 'Identifier'
     | 'FunctionDeclaration'
     | 'VariableDeclaration'
     | 'ExportNamedDeclaration'
@@ -8,6 +9,7 @@ export type Node = {
     | 'VariableDeclaration'
     | 'CallExpression'
     | 'VariableDeclarator'
+    | 'MemberExpression'
   name: string
   body: {
     body: any[]
@@ -15,6 +17,7 @@ export type Node = {
   init: Node[]
   callee: Node
   expression: Node
+  property: Node
   declaration: {
     declarations: {
       init: Node

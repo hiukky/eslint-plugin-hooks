@@ -74,7 +74,7 @@ module.exports = {
           .forEach((declarations: Node[]) => {
             let nodes: Node[] = []
 
-            declarations?.forEach?.(node => {
+            declarations.forEach?.(node => {
               if (node['type'] === 'ExpressionStatement') {
                 nodes.push(node['expression'])
               }

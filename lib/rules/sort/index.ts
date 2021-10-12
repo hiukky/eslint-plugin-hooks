@@ -74,7 +74,7 @@ module.exports = {
           .forEach((declarations: Node[]) => {
             let nodes: Node[] = []
 
-            declarations?.forEach(node => {
+            declarations.forEach?.(node => {
               if (node['type'] === 'ExpressionStatement') {
                 nodes.push(node['expression'])
               }
@@ -106,13 +106,13 @@ module.exports = {
 
                   case 'VariableDeclarator':
                   default:
-                    return declaration.callee.property || declaration.callee
+                    return declaration.callee?.property || declaration.callee
                 }
               })
               .filter(Boolean)
               .filter(
                 hook =>
-                  hook.name.slice(0, 3) === 'use' && groups.includes(hook.name),
+                  hook.name?.slice(0, 3) === 'use' && groups.includes(hook.name),
               )
 
             const correctOrdering: Node[] = [...hooks].sort(

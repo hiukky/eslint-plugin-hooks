@@ -95,18 +95,20 @@ module.exports = {
               )
               .filter(node => node.length)
               .map(([type, declaration]) => {
-                switch (type) {
-                  case 'MemberExpression':
-                    return declaration.property
+                if (declaration !== null) {
+                  switch (type) {
+                    case 'MemberExpression':
+                      return declaration.property
 
-                  case 'CallExpression':
-                    return declaration.type === 'MemberExpression'
-                      ? declaration.property
-                      : declaration.callee || declaration
+                    case 'CallExpression':
+                      return declaration.type === 'MemberExpression'
+                        ? declaration.property
+                        : declaration.callee || declaration
 
-                  case 'VariableDeclarator':
-                  default:
-                    return declaration.callee?.property || declaration.callee
+                    case 'VariableDeclarator':
+                    default:
+                      return declaration.callee?.property || declaration.callee
+                  }
                 }
               })
               .filter(Boolean)

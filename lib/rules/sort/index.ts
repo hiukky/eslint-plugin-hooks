@@ -93,7 +93,7 @@ module.exports = {
                     ? [type, init]
                     : []) as [Node['type'], Node],
               )
-              .filter(node => node.length)
+              .filter(node => node.length === 2)
               .map(([type, declaration]) => {
                 switch (type) {
                   case 'MemberExpression':
@@ -112,7 +112,8 @@ module.exports = {
               .filter(Boolean)
               .filter(
                 hook =>
-                  hook.name?.slice(0, 3) === 'use' && groups.includes(hook.name),
+                  hook.name?.slice(0, 3) === 'use' &&
+                  groups.includes(hook.name),
               )
 
             const correctOrdering: Node[] = [...hooks].sort(

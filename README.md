@@ -17,14 +17,14 @@
     <img alt="GitHub license" src="https://img.shields.io/github/license/hiukky/eslint-plugin-hooks?color=0d1117&style=for-the-badge&colorA=1C1D27" />
   </a>
   <a href="https://www.npmjs.com/package/eslint-plugin-hooks">
-    <img alt="NPM" src="https://img.shields.io/npm/dt/eslint-plugin-hooks-sort?color=0d1117&style=for-the-badge&colorA=1C1D27" />
+    <img alt="NPM" src="https://img.shields.io/npm/dt/eslint-plugin-hooks?color=0d1117&style=for-the-badge&colorA=1C1D27" />
   </a>
 </p>
 
 <h3 align="center"> A simple organizer for ordering hooks. </h3>
 
 <p align="center">
-  <sub>Built with ❤︎ by <a href="https://hiukky.com">Hiukky</a>
+  <sub>Built with ❤︎ by <a href="https://hiukky.com">hiukky</a>
   <br/>
 </p>
 

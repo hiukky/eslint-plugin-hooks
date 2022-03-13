@@ -21,6 +21,7 @@
     "prebuild": "yarn clean",
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r tsconfig-paths/register -r ts-node/register 'lib/**/*.spec.ts' --recursive",
     "build": "tsc -d -p tsconfig.build.json",
+    "build-watch": "tsc -d -w -p tsconfig.build.json",
     "format": "prettier --write \"**/*.ts\"",
     "prepublishOnly": "pinst --disable",
     "postpublish": "pinst --enable"

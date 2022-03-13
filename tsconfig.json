@@ -9,7 +9,7 @@
     "jsx": "react",
     "outDir": "./dist",
     "strict": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "strictNullChecks": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,

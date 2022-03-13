@@ -2,9 +2,9 @@
  * @fileoverview A simple organizer for ordering hooks.
  * @author Romullo @hiukky
  */
-'use strict'
 
-import { Context, Program, Node } from './types'
+import { Rule, AST, SourceCode } from 'eslint'
+import { Program, Node } from './types'
 
 export const DEFAULT_GROUPS: string[] = [
   'useReducer',
@@ -16,6 +16,200 @@ export const DEFAULT_GROUPS: string[] = [
   'useEffect',
 ]
 
+function takeTokensBeforeWhile(
+  sourceCode: any,
+  node: any,
+  condition: { (token: AST.Token): boolean; (arg0: never): any },
+) {
+  const tokens = getTokensOrCommentsBefore(sourceCode, node, 100)
+  const result = []
+  for (let i = tokens.length - 1; i >= 0; i--) {
+    if (condition(tokens[i])) {
+      result.push(tokens[i])
+    } else {
+      break
+    }
+  }
+  return result.reverse()
+}
+
+function getTokensOrCommentsAfter(
+  sourceCode: SourceCode,
+  node: any,
+  count: number,
+) {
+  let currentNodeOrToken = node
+  const result = []
+  for (let i = 0; i < count; i++) {
+    currentNodeOrToken = sourceCode.getTokenAfter(currentNodeOrToken)
+    if (currentNodeOrToken == null) {
+      break
+    }
+    // @ts-ignore
+    result.push(currentNodeOrToken)
+  }
+  return result
+}
+
+function getTokensOrCommentsBefore(
+  sourceCode: { getTokenOrCommentBefore: (arg0: any) => any },
+  node: any,
+  count: number,
+) {
+  let currentNodeOrToken = node
+  const result = []
+  for (let i = 0; i < count; i++) {
+    currentNodeOrToken = sourceCode.getTokenOrCommentBefore(currentNodeOrToken)
+    if (currentNodeOrToken == null) {
+      break
+    }
+
+    // @ts-ignore
+    result.push(currentNodeOrToken)
+  }
+  return result.reverse()
+}
+function takeTokensAfterWhile(
+  sourceCode: SourceCode,
+  node: AST.Token,
+  condition: { (token: AST.Token): boolean; (arg0: never): any },
+) {
+  const tokens = getTokensOrCommentsAfter(sourceCode, node, 100)
+  const result = []
+  for (let i = 0; i < tokens.length; i++) {
+    if (condition(tokens[i])) {
+      result.push(tokens[i])
+    } else {
+      break
+    }
+  }
+  return result
+}
+
+function findEndOfLineWithComments(sourceCode: SourceCode, node: AST.Token) {
+  const tokensToEndOfLine = takeTokensAfterWhile(
+    sourceCode,
+    node,
+    commentOnSameLineAs(node),
+  )
+  const endOfTokens =
+    tokensToEndOfLine.length > 0
+      ? // @ts-ignore
+        tokensToEndOfLine[tokensToEndOfLine.length - 1].range[1]
+      : node.range[1]
+  let result = endOfTokens
+  for (let i = endOfTokens; i < sourceCode.text.length; i++) {
+    if (sourceCode.text[i] === '\n') {
+      result = i + 1
+      break
+    }
+    if (
+      sourceCode.text[i] !== ' ' &&
+      sourceCode.text[i] !== '\t' &&
+      sourceCode.text[i] !== '\r'
+    ) {
+      break
+    }
+    result = i + 1
+  }
+  return result
+}
+
+function commentOnSameLineAs(node: AST.Token) {
+  return (token: AST.Token) =>
+    // @ts-ignore
+    (token.type === 'Block' || token.type === 'Line') &&
+    token.loc.start.line === token.loc.end.line &&
+    token.loc.end.line === node.loc.end.line
+}
+
+function findStartOfLineWithComments(sourceCode: SourceCode, node: Node) {
+  const tokensToEndOfLine = takeTokensBeforeWhile(
+    sourceCode,
+    node,
+    // @ts-ignore
+    commentOnSameLineAs(node),
+  )
+  const startOfTokens =
+    // @ts-ignore
+    tokensToEndOfLine.length > 0 ? tokensToEndOfLine[0].range[0] : node.range[0]
+  let result = startOfTokens
+  for (let i = startOfTokens - 1; i > 0; i--) {
+    if (sourceCode.text[i] !== ' ' && sourceCode.text[i] !== '\t') {
+      break
+    }
+    result = i
+  }
+  return result
+}
+
+function findRootNode(node: Node) {
+  let parent = node
+  // @ts-ignore
+  while (parent.parent != null && parent.parent.body == null) {
+    // @ts-ignore
+    parent = parent.parent
+  }
+  return parent
+}
+
+function makeOutOfOrderReport(
+  context: Rule.RuleContext,
+  hooks: Node[],
+  groups: string[],
+) {
+  const correctOrdering: Node[] = [...hooks].sort(
+    (a, b) => groups.indexOf(a.name) - groups.indexOf(b.name),
+  )
+  hooks.forEach((hook, idx) => {
+    const noMatching = (): boolean =>
+      correctOrdering.length > 1 && correctOrdering[idx].name !== hook.name
+
+    if (noMatching()) {
+      context.report({
+        // @ts-ignore
+        node: hook,
+        message: `Non-matching declaration order. ${hook.name} comes ${
+          !idx ? 'after' : 'before'
+        } ${correctOrdering[idx].name}.`,
+        fix: fixer => {
+          const sourceCode = context.getSourceCode()
+          const firstRoot = findRootNode(hook)
+          const firstRootStart = findStartOfLineWithComments(
+            sourceCode,
+            firstRoot,
+          )
+
+          const secondRoot = findRootNode(correctOrdering[idx])
+          const secondRootStart = findStartOfLineWithComments(
+            sourceCode,
+            secondRoot,
+          )
+          const secondRootEnd = findEndOfLineWithComments(
+            sourceCode,
+            // @ts-ignore
+            secondRoot,
+          )
+
+          let newCode = sourceCode.text.substring(
+            secondRootStart,
+            secondRootEnd,
+          )
+          if (newCode[newCode.length - 1] !== '\n') {
+            newCode = newCode + '\n'
+          }
+
+          return fixer.replaceTextRange(
+            [firstRootStart, secondRootEnd],
+            newCode +
+              sourceCode.text.substring(firstRootStart, secondRootStart),
+          )
+        },
+      })
+    }
+  })
+}
+
 module.exports = {
   meta: {
     docs: {
@@ -24,7 +218,7 @@ module.exports = {
       url: 'https://github.com/hiukky/eslint-plugin-hooks/blob/main/docs/rules/sort.md',
       recommended: false,
     },
-    fixable: undefined,
+    fixable: 'code',
     schema: [
       {
         type: 'object',
@@ -37,7 +231,7 @@ module.exports = {
     ],
   },
 
-  create: (ctx: Context) => {
+  create: (ctx: Rule.RuleContext) => {
     const options = ctx.options[0]
     const groups: string[] = options?.groups || DEFAULT_GROUPS
 
@@ -62,30 +256,30 @@ module.exports = {
 
             if (isExportableDeclaration()) {
               declarations =
-                node['declaration']?.['declarations']?.[0]['init'] ||
-                node['declaration']
+                node.declaration?.declarations?.[0].init || node.declaration
             } else {
-              declarations = node['declarations']?.[0]['init'] || node
+              declarations = node.declarations?.[0].init || node
             }
 
-            return declarations?.['body']?.['body']
+            return declarations?.body?.body
           })
           .filter(Boolean)
           .forEach((declarations: Node[]) => {
-            let nodes: Node[] = []
+            const nodes: Node[] = []
 
             declarations.forEach?.(node => {
-              if (node['type'] === 'ExpressionStatement') {
-                nodes.push(node['expression'])
+              if (node.type === 'ExpressionStatement') {
+                nodes.push(node.expression)
               }
 
-              if (node['type'] === 'VariableDeclaration') {
-                nodes.push(...node['declarations'])
+              if (node.type === 'VariableDeclaration') {
+                nodes.push(...node.declarations)
               }
             })
 
             const hooks = nodes
               ?.map(
+                // eslint-disable-next-line no-nested-ternary
                 ({ type, callee, init }) =>
                   (type === 'CallExpression'
                     ? [type, callee]
@@ -115,25 +309,7 @@ module.exports = {
                   hook.name?.slice(0, 3) === 'use' &&
                   groups.includes(hook.name),
               )
-
-            const correctOrdering: Node[] = [...hooks].sort(
-              (a, b) => groups.indexOf(a.name) - groups.indexOf(b.name),
-            )
-
-            hooks.forEach((hook, idx) => {
-              const noMatching = (): boolean =>
-                correctOrdering.length > 1 &&
-                correctOrdering[idx].name !== hook.name
-
-              if (noMatching()) {
-                ctx.report(
-                  hook,
-                  `Non-matching declaration order. ${hook.name} comes ${
-                    !idx ? 'after' : 'before'
-                  } ${correctOrdering[idx].name}.`,
-                )
-              }
-            })
+            makeOutOfOrderReport(ctx, hooks, groups)
           })
       },
     }

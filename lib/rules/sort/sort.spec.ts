@@ -2,7 +2,6 @@
  * @fileoverview A simple organizer for ordering hooks.
  * @author Hiukky
  */
-'use strict'
 
 import { RuleTester, Rule, Linter } from 'eslint'
 import * as rule from '@rules/sort'
@@ -192,10 +191,6 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
         }, [])
 
         const [todos, dispatch] = useReducer(todosReducer)
-
-        const memoizedCallback = useCallback(() => {
-          doSomething(a, b)
-        }, [a, b])
       }
       `,
       errors: [
@@ -205,15 +200,23 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
         },
         {
           message:
-            'Non-matching declaration order. useReducer comes before useCallback.',
-        },
-        {
-          message:
-            'Non-matching declaration order. useCallback comes before useEffect.',
+            'Non-matching declaration order. useReducer comes before useEffect.',
         },
       ],
       parserOptions,
       options,
+
+      output: `
+      import { useState, useEffect, useReducer } from 'react'
+
+      export function ComponentA() {
+        const [todos, dispatch] = useReducer(todosReducer)
+        useEffect(() => {
+          document.title = 'Hello'
+        }, [])
+
+      }
+      `,
     },
     {
       code: `
@@ -252,6 +255,22 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
       ],
       parserOptions,
       options,
+      output: `
+      import { useState, useEffect, useContext,useRef } from 'react'
+
+      export function ComponentA() {
+        const locale = useContext(LocaleContext)
+        const [count, setCount] = useState(0)
+      }
+
+      export function ComponentB() {
+        const countRef = useRef(0)
+        useEffect(() => {
+          console.log('Hello')
+        }, [])
+
+      }
+      `,
     },
     {
       code: `
@@ -282,6 +301,22 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
       ],
       parserOptions,
       options,
+      output: `
+      import * as React from 'react'
+      import { useRef } from 'react'
+
+      export const ComponentA = () => {
+        const [count, setCount] = React.useState(0)
+        React.useEffect(() => {
+          console.log('Hello')
+        },[])
+
+        const countRef = useRef(0)
+
+
+        return <></>
+      }
+      `,
     },
   ],
 })

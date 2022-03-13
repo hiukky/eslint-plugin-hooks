@@ -3,7 +3,7 @@
  * @author Romullo @hiukky
  */
 
-import { Rule } from 'eslint'
+import { Rule, AST, SourceCode } from 'eslint'
 import { Program, Node } from './types'
 
 export const DEFAULT_GROUPS: string[] = [
@@ -16,7 +16,11 @@ export const DEFAULT_GROUPS: string[] = [
   'useEffect',
 ]
 
-function takeTokensBeforeWhile(sourceCode, node, condition) {
+function takeTokensBeforeWhile(
+  sourceCode: any,
+  node: any,
+  condition: { (token: AST.Token): boolean; (arg0: never): any },
+) {
   const tokens = getTokensOrCommentsBefore(sourceCode, node, 100)
   const result = []
   for (let i = tokens.length - 1; i >= 0; i--) {
@@ -29,11 +33,15 @@ function takeTokensBeforeWhile(sourceCode, node, condition) {
   return result.reverse()
 }
 
-function getTokensOrCommentsAfter(sourceCode, node, count) {
+function getTokensOrCommentsAfter(
+  sourceCode: SourceCode,
+  node: any,
+  count: number,
+) {
   let currentNodeOrToken = node
   const result = []
   for (let i = 0; i < count; i++) {
-    currentNodeOrToken = sourceCode.getTokenOrCommentAfter(currentNodeOrToken)
+    currentNodeOrToken = sourceCode.getTokenAfter(currentNodeOrToken)
     if (currentNodeOrToken == null) {
       break
     }
@@ -43,7 +51,11 @@ function getTokensOrCommentsAfter(sourceCode, node, count) {
   return result
 }
 
-function getTokensOrCommentsBefore(sourceCode, node, count) {
+function getTokensOrCommentsBefore(
+  sourceCode: { getTokenOrCommentBefore: (arg0: any) => any },
+  node: any,
+  count: number,
+) {
   let currentNodeOrToken = node
   const result = []
   for (let i = 0; i < count; i++) {
@@ -57,7 +69,11 @@ function getTokensOrCommentsBefore(sourceCode, node, count) {
   }
   return result.reverse()
 }
-function takeTokensAfterWhile(sourceCode, node, condition) {
+function takeTokensAfterWhile(
+  sourceCode: SourceCode,
+  node: AST.Token,
+  condition: { (token: AST.Token): boolean; (arg0: never): any },
+) {
   const tokens = getTokensOrCommentsAfter(sourceCode, node, 100)
   const result = []
   for (let i = 0; i < tokens.length; i++) {
@@ -69,7 +85,8 @@ function takeTokensAfterWhile(sourceCode, node, condition) {
   }
   return result
 }
-function findEndOfLineWithComments(sourceCode, node) {
+
+function findEndOfLineWithComments(sourceCode: SourceCode, node: AST.Token) {
   const tokensToEndOfLine = takeTokensAfterWhile(
     sourceCode,
     node,
@@ -98,16 +115,19 @@ function findEndOfLineWithComments(sourceCode, node) {
   return result
 }
 
-function commentOnSameLineAs(node) {
-  return token =>
+function commentOnSameLineAs(node: AST.Token) {
+  return (token: AST.Token) =>
+    // @ts-ignore
     (token.type === 'Block' || token.type === 'Line') &&
     token.loc.start.line === token.loc.end.line &&
     token.loc.end.line === node.loc.end.line
 }
-function findStartOfLineWithComments(sourceCode, node) {
+
+function findStartOfLineWithComments(sourceCode: SourceCode, node: Node) {
   const tokensToEndOfLine = takeTokensBeforeWhile(
     sourceCode,
     node,
+    // @ts-ignore
     commentOnSameLineAs(node),
   )
   const startOfTokens =
@@ -123,20 +143,8 @@ function findStartOfLineWithComments(sourceCode, node) {
   return result
 }
 
-function canReorderItems(firstNode, secondNode) {
-  const parent = firstNode.parent
-  const [firstIndex, secondIndex] = [
-    parent.body.indexOf(firstNode),
-    parent.body.indexOf(secondNode),
-  ].sort()
-  const nodesBetween = parent.body.slice(firstIndex, secondIndex + 1)
-
-  return true
-}
-
 function findRootNode(node: Node) {
   let parent = node
-
   // @ts-ignore
   while (parent.parent != null && parent.parent.body == null) {
     // @ts-ignore
@@ -153,7 +161,6 @@ function makeOutOfOrderReport(
   const correctOrdering: Node[] = [...hooks].sort(
     (a, b) => groups.indexOf(a.name) - groups.indexOf(b.name),
   )
-  console.log('kek2')
   hooks.forEach((hook, idx) => {
     const noMatching = (): boolean =>
       correctOrdering.length > 1 && correctOrdering[idx].name !== hook.name
@@ -172,7 +179,6 @@ function makeOutOfOrderReport(
             sourceCode,
             firstRoot,
           )
-          const firstRootEnd = findEndOfLineWithComments(sourceCode, firstRoot)
 
           const secondRoot = findRootNode(correctOrdering[idx])
           const secondRootStart = findStartOfLineWithComments(
@@ -181,9 +187,9 @@ function makeOutOfOrderReport(
           )
           const secondRootEnd = findEndOfLineWithComments(
             sourceCode,
+            // @ts-ignore
             secondRoot,
           )
-          // const canFix = canReorderItems(firstRoot, secondRoot)
 
           let newCode = sourceCode.text.substring(
             secondRootStart,
@@ -304,24 +310,6 @@ module.exports = {
                   groups.includes(hook.name),
               )
             makeOutOfOrderReport(ctx, hooks, groups)
-            // const correctOrdering: Node[] = [...hooks].sort(
-            //   (a, b) => groups.indexOf(a.name) - groups.indexOf(b.name),
-            // );
-
-            // // console.log(hooks);
-            // hooks.forEach((hook, idx) => {
-            //   const noMatching = (): boolean => correctOrdering.length > 1
-            //     && correctOrdering[idx].name !== hook.name;
-
-            //   if (noMatching()) {
-            //     ctx.report(
-            //       hook,
-            //       `Non-matching declaration order. ${hook.name} comes ${
-            //         !idx ? 'after' : 'before'
-            //       } ${correctOrdering[idx].name}.`,
-            //     );
-            //   }
-            // });
           })
       },
     }

@@ -1,3 +1,5 @@
+import { Comment } from 'estree'
+
 export type Node = {
   type:
     | 'Identifier'
@@ -36,6 +38,17 @@ export type Program = {
 export type Options = {
   groups: string[]
 }
+
+export type HooksSource = {
+  node: Node
+  hook: Node
+  comments: Comment[]
+}
+
+export type HooksMetadata = {
+  type: Node['type']
+  declaration: Node
+} & Pick<HooksSource, 'node' | 'comments'>
 
 export type Context = {
   report(node: Node, message: string): void

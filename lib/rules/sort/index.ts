@@ -2,7 +2,6 @@
  * @fileoverview A simple organizer for ordering hooks.
  * @author Romullo @hiukky
  */
-'use strict'
 
 import { Rule } from 'eslint'
 import { format } from 'prettier'
@@ -15,6 +14,7 @@ export const DEFAULT_GROUPS: string[] = [
   'useRef',
   'useDispatch',
   'useCallback',
+  'useLayoutEffect',
   'useEffect',
 ]
 
@@ -25,6 +25,10 @@ module.exports = {
       category: 'Sort',
       url: 'https://github.com/hiukky/eslint-plugin-hooks/blob/main/docs/rules/sort.md',
       recommended: false,
+    },
+    messages: {
+      noMatching:
+        'Non-matching declaration order. {{ bad }} comes {{ order }} {{ good }}.',
     },
     fixable: 'code',
     schema: [
@@ -71,22 +75,21 @@ module.exports = {
 
             if (isExportableDeclaration(node.type)) {
               declarations =
-                node['declaration']?.['declarations']?.[0]['init'] ||
-                node['declaration']
+                node.declaration?.declarations?.[0].init || node.declaration
             } else {
-              declarations = node['declarations']?.[0]['init'] || node
+              declarations = node.declarations?.[0].init || node
             }
 
-            return declarations?.['body']?.['body']
+            return declarations?.body?.body
           })
           .filter(Boolean)
           .forEach((declarations: Node[]) => {
-            let nodes: HooksSource[] = []
+            const nodes: HooksSource[] = []
 
             declarations.forEach?.(node => {
               const rootNode = node as unknown as Rule.Node
 
-              if (node['type'] === 'ExpressionStatement') {
+              if (node.type === 'ExpressionStatement') {
                 nodes.push({
                   node,
                   hook: node.expression,
@@ -94,7 +97,7 @@ module.exports = {
                 })
               }
 
-              if (node['type'] === 'VariableDeclaration') {
+              if (node.type === 'VariableDeclaration') {
                 node.declarations.forEach(declaration => {
                   nodes.push({
                     node,
@@ -167,33 +170,26 @@ module.exports = {
                 const node = hook.declaration as unknown as Rule.Node
                 const rootNode = program as unknown as Rule.Node
 
-                const hookCodeBad = trim(getCodeText(hook))
-                const hookCodeGood = trim(getCodeText(correctOrdering[idx]))
+                const hookBadCode = trim(getCodeText(hook))
+                const hookGoodCode = trim(getCodeText(correctOrdering[idx]))
 
-                let newSourceCode = format(
+                const newSourceCode = format(
                   trim(source.getText())
-                    .replace(hookCodeGood, hookCodeBad)
-                    .replace(hookCodeBad, hookCodeGood),
-                  // .replace(
-                  //   new RegExp(`(${hookCodeBad}|${hookCodeGood})`, 'g'),
-                  //   match =>
-                  //     match === hookCodeBad ? hookCodeGood : hookCodeBad,
-                  // ),
+                    .replace(hookGoodCode, hookBadCode)
+                    .replace(hookBadCode, hookGoodCode),
                   {
                     parser: 'babel',
                   },
                 )
 
-                console.log('CODE', idx)
-                console.log(newSourceCode)
-
                 ctx.report({
                   node,
-                  message: `Non-matching declaration order. ${
-                    hook.declaration.name
-                  } comes ${!idx ? 'after' : 'before'} ${
-                    correctOrdering[idx].declaration.name
-                  }.`,
+                  messageId: 'noMatching',
+                  data: {
+                    bad: hook.declaration.name,
+                    order: !idx ? 'after' : 'before',
+                    good: correctOrdering[idx].declaration.name,
+                  },
                   fix: fixer =>
                     fixer.replaceText(rootNode, newSourceCode.trim()),
                 })

@@ -2,11 +2,10 @@
  * @fileoverview A simple organizer for ordering hooks.
  * @author Hiukky
  */
-'use strict'
 
 import { RuleTester, Rule, Linter } from 'eslint'
-import * as rule from '@rules/sort'
 import { format, Options } from 'prettier'
+import * as rule from '@rules/sort'
 
 const Tester = new RuleTester()
 
@@ -317,6 +316,8 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
         export function ComponentA() {
           const [count, setCount] = useState(0)
           const locale = useContext(context)
+
+          return null
         }
 
         export function ComponentB() {
@@ -325,6 +326,8 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
           }, [])
 
           const countRef = useRef(0)
+
+
         }
         `,
         prettierOptions,
@@ -339,6 +342,8 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
         export function ComponentA() {
           const locale = useContext(context);
           const [count, setCount] = useState(0);
+
+          return null
         }
 
         export function ComponentB() {
@@ -347,6 +352,8 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
           useEffect(() => {
             console.log("Hello");
           }, []);
+
+          return null
         }
         `,
         prettierOptions,

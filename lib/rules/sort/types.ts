@@ -49,8 +49,3 @@ export type HooksMetadata = {
   type: Node['type']
   declaration: Node
 } & Pick<HooksSource, 'node' | 'comments'>
-
-export type Context = {
-  report(node: Node, message: string): void
-  options: Options[]
-}

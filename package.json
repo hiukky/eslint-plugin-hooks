@@ -22,34 +22,43 @@
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r tsconfig-paths/register -r ts-node/register 'lib/**/*.spec.ts' --recursive",
     "build": "tsc -d -p tsconfig.build.json",
     "format": "prettier --write \"**/*.ts\"",
+    "lint": "eslint --fix --ext .ts,.tsx .",
     "prepublishOnly": "pinst --disable",
     "postpublish": "pinst --enable"
   },
   "dependencies": {
     "requireindex": "~1.2.0"
   },
+  "peerDependencies": {
+    "prettier": "^2.6.0",
+    "eslint": "^8.11.0"
+  },
   "devDependencies": {
-    "@commitlint/cli": "^16.1.0",
-    "@commitlint/config-conventional": "^16.0.0",
+    "@commitlint/cli": "^16.2.3",
+    "@commitlint/config-conventional": "^16.2.1",
     "@types/chai": "^4.3.0",
     "@types/eslint": "^8.4.1",
     "@types/mocha": "^9.1.0",
-    "@types/node": "^17.0.17",
+    "@types/node": "^17.0.22",
     "@types/prettier": "^2.4.4",
-    "@types/react": "^17.0.39",
+    "@types/react": "^17.0.41",
     "@types/requireindex": "^1.2.0",
-    "@typescript-eslint/eslint-plugin": "^5.11.0",
-    "eslint": "^8.9.0",
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "eslint": "^8.11.0",
     "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.0",
     "husky": "^7.0.4",
-    "mocha": "^9.2.0",
-    "pinst": "^2.1.6",
-    "prettier": "^2.5.1",
+    "mocha": "^9.2.2",
+    "pinst": "^3.0.0",
     "react": "^17.0.2",
     "rimraf": "^3.0.2",
-    "ts-node": "^10.5.0",
-    "tsconfig-paths": "^3.12.0",
-    "typescript": "^4.5.5"
+    "ts-node": "^10.7.0",
+    "tsconfig-paths": "^3.14.1",
+    "typescript": "^4.6.2"
   },
   "engines": {
     "node": ">=0.10.0"

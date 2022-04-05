@@ -50,7 +50,7 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
           console.log('Hello')
         },[])
 
-        return <></>
+        return null
       }
      `,
       parserOptions,
@@ -72,6 +72,8 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
         useEffect(() => {
           document.title = 'Hello'
         }, [])
+
+        return null
       }
      `,
       parserOptions,
@@ -93,6 +95,8 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
         useEffect(() => {
           document.title = 'Hello'
         }, [])
+
+        return null
       }
 
       const ComponentB = () => {
@@ -107,6 +111,8 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
         useEffect(() => {
           document.title = 'Hello'
         }, [])
+
+        return null
       }
 
       export function ComponentC() {
@@ -121,6 +127,8 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
         useEffect(() => {
           document.title = 'Hello'
         }, [])
+
+        return null
       }
 
       export const ComponentD = () => {
@@ -135,6 +143,8 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
         useEffect(() => {
           document.title = 'Hello'
         }, [])
+
+        return null
       }
      `,
       parserOptions,
@@ -154,6 +164,8 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
         useEffect(() => {
           document.title = 'Hello'
         }, [])
+
+        return null
       }
      `,
       parserOptions,
@@ -173,6 +185,35 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
         useEffect(() => {
           document.title = 'Hello'
         }, [])
+
+        return null
+      }
+
+      export default ComponentA
+     `,
+      parserOptions,
+      options,
+    },
+    {
+      code: `
+      var variableInitialized = null
+
+      function ComponentA() {
+        const [todos, dispatch] = useReducer(todosReducer)
+
+        const [count, setCount] = useState(0)
+
+        const memoizedCallback = useCallback(() => {
+          doSomething(a, b);
+        },[a, b])
+
+        useEffect(() => {
+          document.title = 'Hello'
+        }, [])
+
+        let uninitializedVariable
+
+        return null
       }
 
       export default ComponentA
@@ -196,6 +237,8 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
         const memoizedCallback = useCallback(() => {
           doSomething(a, b)
         }, [a, b])
+
+        return null
       }
       `,
       errors: [
@@ -222,6 +265,8 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
       export function ComponentA() {
         const [count, setCount] = useState(0)
         const locale = useContext(LocaleContext)
+
+        return null
       }
 
       export function ComponentB() {
@@ -230,6 +275,8 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
         }, [])
 
         const countRef = useRef(0)
+
+        return null
       }
       `,
       errors: [
@@ -267,7 +314,41 @@ Tester.run('hooks/sort', rule as unknown as Rule.RuleModule, {
 
         const [count, setCount] = React.useState(0)
 
-        return <></>
+        return null
+      }
+      `,
+      errors: [
+        {
+          message:
+            'Non-matching declaration order. useEffect comes after useState.',
+        },
+        {
+          message:
+            'Non-matching declaration order. useState comes before useEffect.',
+        },
+      ],
+      parserOptions,
+      options,
+    },
+    {
+      code: `
+      import * as React from 'react'
+      import { useRef } from 'react'
+
+      var variableInitialized = null
+
+      export const ComponentA = () => {
+        React.useEffect(() => {
+          console.log('Hello')
+        },[])
+
+        const countRef = useRef(0)
+
+        const [count, setCount] = React.useState(0)
+
+        let uninitializedVariable
+
+        return null
       }
       `,
       errors: [

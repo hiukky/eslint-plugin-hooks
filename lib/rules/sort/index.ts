@@ -106,7 +106,7 @@ module.exports = {
 
                   case 'VariableDeclarator':
                   default:
-                    return declaration.callee?.property || declaration.callee
+                    return declaration?.callee?.property || declaration?.callee
                 }
               })
               .filter(Boolean)
